@@ -1,0 +1,116 @@
+using System;
+using System.Collections.Generic;
+
+class Urun
+{
+    public string Ad { get; set; }
+    public double Fiyat { get; set; }
+    
+    public Urun(string ad, double fiyat)
+    {
+        Ad = ad;
+        Fiyat = fiyat;
+    }
+    
+    public virtual double KDVUygula()
+    {
+        return Fiyat;
+    }
+}
+
+class Tekstil : Urun
+{
+    public string KumasTuru { get; set; }
+    public string Beden { get; set; }
+    public string UreticiFirma { get; set; }
+
+    public Tekstil(string ad, double fiyat, string kumasTuru, string beden, string ureticiFirma)
+        : base(ad, fiyat)
+    {
+        KumasTuru = kumasTuru;
+        Beden = beden;
+        UreticiFirma = ureticiFirma;
+    }
+
+    public override double KDVUygula()
+    {
+        return Fiyat * 1.20; // %20 KDV
+    }
+}
+
+class CepTelefonu : Urun
+{
+    public string Ozellikler { get; set; }
+    public string Marka { get; set; }
+
+    public CepTelefonu(string ad, double fiyat, string ozellikler, string marka)
+        : base(ad, fiyat)
+    {
+        Ozellikler = ozellikler;
+        Marka = marka;
+    }
+
+    public override double KDVUygula()
+    {
+        return Fiyat * 1.120; // %120 KDV
+    }
+}
+
+class Ekmek : Urun
+{
+    public string EkmekTuru { get; set; }
+    public double Gramaj { get; set; }
+
+    public Ekmek(string ad, double fiyat, string ekmekTuru, double gramaj)
+        : base(ad, fiyat)
+    {
+        EkmekTuru = ekmekTuru;
+        Gramaj = gramaj;
+    }
+
+    public override double KDVUygula()
+    {
+        return Fiyat * 1.20; // %20 KDV
+    }
+}
+
+class Sepet
+{
+    private List<Urun> urunler;
+    private double toplamTutar;
+
+    public Sepet()
+    {
+        urunler = new List<Urun>();
+        toplamTutar = 0;
+    }
+
+    public void UrunEkle(Urun urun)
+    {
+        urunler.Add(urun);
+        toplamTutar += urun.KDVUygula();
+    }
+
+    public void ToplamTutarYazdir()
+    {
+        Console.WriteLine("Toplam Tutar: " + toplamTutar + " TL");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Sepet sepet = new Sepet();
+
+        Tekstil tekstil = new Tekstil("T-Shirt", 100, "Pamuk", "M", "ABC Firması");
+        CepTelefonu telefon = new CepTelefonu("Akıllı Telefon", 10000, "64GB, 5G", "XYZ Marka");
+        Ekmek ekmek = new Ekmek("Tam Buğday Ekmeği", 5, "Tam Buğday", 250);
+
+        sepet.UrunEkle(tekstil);
+        sepet.UrunEkle(telefon);
+        sepet.UrunEkle(ekmek);
+
+        sepet.ToplamTutarYazdir();
+    }
+}
